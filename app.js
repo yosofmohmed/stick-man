@@ -12,7 +12,7 @@ console.log(window.innerHeight);
     
 
 
-
+let deggress1 = 0;  
 
 let player_height = 128;
 let player_width = 64;
@@ -74,6 +74,7 @@ window.onload = function () {
 
     player_left_gun_img = new Image();
     player_left_gun_img.src = "./img/holding_wepon_left.png"
+    
 
 
 
@@ -85,7 +86,8 @@ window.onload = function () {
     addEventListener("keyup", hold_gun)
     addEventListener("keyup", shoot)
     addEventListener("resize", resizefunc)
-    addEventListener("mousemove", give_x_y)
+    document.addEventListener("mousemove", give_x_y);
+
     addEventListener("keydown", remove_cursor)
 }
 
@@ -105,7 +107,10 @@ function update() {
         player.x = board_width;
     }
     player.y = Math.min(player.y + velocity_Y, player_Y);
+    context.rotate(0 * Math.PI / 180);
     context.drawImage(player.img, player.x, player.y, player.width, player.height);
+    let arm_x = player.x + player.width / 2;
+    let arm_y = player.y + player.height / 2;
 
     for (let i = 0; i < bulletarray.length; i++) {
 
@@ -130,6 +135,15 @@ function update() {
 
     bullet_left_loction = player.x;
     bullet_right_loction = player.x + 50;
+
+    console.log(deggress1);
+    context.fillStyle = "Green";
+    context.save();
+    context.translate(player.x, player.y);
+    context.rotate(60 * Math.PI / 180);
+    context.fillRect(arm_x, arm_y - 15, 64, 4);
+    context.restore();
+
 
     
     
@@ -249,7 +263,26 @@ function resizefunc() {
 
 function give_x_y(e)
 {
-        console.log(e.clientY);
+        x1 = e.clientX;
+        y1 = e.clientY;
+        x2 = player.x + player.width / 2;
+        y2 = player.y + player.height / 2;
+        var distY = Math.abs(y2-y1); //opposite
+        var distX = Math.abs(x2-x1); //adjacent
+        var dist = Math.sqrt((distY*distY)+(distX*distX)); //hypotenuse, 
+           //don't know if there is a built in JS function to do the square of a number
+        var val = distY/dist;
+        var aSine = Math.asin(val);
+        if (aSine*(180/Math.PI) > 180)
+        {
+            deggress1 = 0
+        }
+        deggress1 = Math.abs(aSine*(180/Math.PI)*2.57142857 + 30 -180 | 0);
+        
+           
+        
+        
+        
 }
 function remove_cursor(e)
 {
@@ -262,4 +295,9 @@ function remove_cursor(e)
     {
         document.body.style.cursor = "auto";
     }
+}
+
+function converter(number)
+{
+    
 }
